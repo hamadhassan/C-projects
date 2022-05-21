@@ -3,8 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
-
-
+//Add some changing 
 using namespace std;
 //______________________Data Structure for User Registration__________________
 const int maxRecord = 20;
