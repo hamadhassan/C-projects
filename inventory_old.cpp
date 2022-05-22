@@ -3,97 +3,56 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
-//Add some changing 
 using namespace std;
-//______________________Data Structure for User Registration__________________
+// Arrays Size
 const int maxRecord = 20;
-string username[maxRecord];
-string firstname[maxRecord];
-string lastname[maxRecord];
-string email[maxRecord];
-long long CNIC[maxRecord];
-string password[maxRecord];
-string contact[maxRecord];
+// User Count
 int usercount = 0;
-// Data Structure for Remaining Approval user accounts
+// Approved User
 string approved_N[maxRecord];
-
-//______________Data Structure for Adding T__________
-string productName[maxRecord];
-string productNo[maxRecord];
-string product_time[maxRecord];
-char dayNight[maxRecord];
-int product_ind[maxRecord];
-int product_house[maxRecord];
-int industrial_price[maxRecord];
-int household_price[maxRecord];
-// Variable for PRODUCT Count
+// Product Count
 int count_product = 0;
-//______DATA STRUCTURES FOR TICKET RESERVATION
-int date[maxRecord];
-string month[maxRecord];
-string pnaam[maxRecord];
-int no_industrial[maxRecord];
-int no_household[maxRecord];
-string products[maxRecord] = {"prod1",  "prod2",  "prod3",  "prod4",  "prod5",
-                             "prod6",  "prod7",  "prod8",  "prod9",  "prod10",
-                             "prod11", "prod12", "prod13", "prod14", "prod15",
-                             "prod16", "prod17", "prod18", "prod19", "prod20"};
-string buy_product[maxRecord];
-string UserN[maxRecord];
+// Reservation count
 int store = 0;
-
-//_______________DATA STRUCTURES FOR Complain or Suggestion
+// Suggestion or complain count
 int suggest_counter = 0;
-string suggest[maxRecord];
-string complainer[maxRecord];
-//_______________DATA STRUCTURES FOR ADMIN REGISTRATION___________________
-string admin_name[5];
-string admin_pass[5];
-string admin_email[5];
+// Admin Count
 int admin_count = 0;
 //_______________DATA STRUCTURES FOR ADMIN REGISTER ____________
 string admin;
 string pass;
-
 int str_to_i(string num);       // Function to Convert string to integer
 long long str_to_l(string num); // Function to convert string to long long
 void header();                  // Function for a HEADER
-void admin_details(string name, string pass,
-                   string mail); // Function to store admin Details
-void admin_register();           // Function to register admin
-bool valid_admin(string name, string password); // Function for admin validation
-void admin_login();                             // Function for admin login
-void admin_menu();                              // Function for ADMIN MENU
-void user_menu();                               // Function for USER MENU
-char identity_mode();                           // Function for IDENTITY MODE
-void admin_mode();                              // Function for admin mode
-void user_mode();                               // Function for user mode
-void user_register(string user_name, string first_name, string last_name,
-                   string e_mail, long long C_NIC, string pass_word,
-                   string con_tact); // Function for a User Register arrays
-void user_reg();                     // Function to Register User
-void gotoxy(int x, int y) ;
+void admin_details(string name, string pass, string mail, string admin_name[],string admin_pass[],string admin_email[]);                                                                                                                                                           // Function to store admin Details
+void admin_register(string admin_name[],string admin_pass[],string admin_email[]);                                                                                                                                                                     // Function to register admin
+bool valid_admin(string name, string password,string admin_name[],string admin_pass[]);                                                                                                                                            // Function for admin validation
+void admin_login(string admin_name[],string admin_pass[]);                                                                                                                                                                        // Function for admin login
+void admin_menu();                                                                                                                                                                         // Function for ADMIN MENU
+void user_menu();                                                                                                                                                                          // Function for USER MENU
+char identity_mode();                                                                                                                                                                      // Function for IDENTITY MODE
+void admin_mode();                                                                                                                                                                         // Function for admin mode
+void user_mode();                                                                                                                                                                          // Function for user mode
+void user_reg(string username[], string firstname[], string lastname[], string email[], long long CNIC[], string password[], string contact[], string gender[], string city[], int age[]); // Function to Register User
+void gotoxy(int x, int y);
 void loading();
 
-//						             				________
-//ADMIN MENU   _________
+//						             				________ADMIN MENU   _________
 // OPTION 01
-void product_details(); // FUNCTION TO ADD PRODUCT DETAIL in ARRAYS
-void add_product();
+void add_product(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]);
 
 // OPTION 02
-int index_returner(string Tname); // Function returning index of PRODUCT to delete
-void delete_product(int idx);        // FUNCTION FOR DELETING PRODUCT
+int index_returner(string Tname, string productName[]);                                                                                                                                               // Function returning index of PRODUCT to delete
+void delete_product(int id, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]); // FUNCTION FOR DELETING PRODUCT
 
 // OPTION 03
-void view_products(); // FUNCTION TO VIEW PRODUCT DETAILS
+void view_products(string productName[], string productNo[], string product_time[], int industrial_price[], int household_price[]); // FUNCTION TO VIEW PRODUCT DETAILS
 
 // OPTION 04
-void modify_product(int idx); // FUNCTION FOR MODIFICATION
+void modify_product(int idx, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]); // FUNCTION FOR MODIFICATION
 
 // OPTION 05
-void buyer_detail(); // FUNCTION View Passenger Details
+void buyer_detail(string username[], string firstname[], string lastname[], long long CNIC[], string contact[], string UserN[], string pnaam[], int no_industrial[], int no_household[], string buy_product[]); // FUNCTION View Passenger Details
 
 // OPTION 06
 //________DATA STRUCTURES FOR FAQS__________
@@ -104,95 +63,135 @@ void faqs();     // Function to view FAQs
 void add_faqs(); // Function to edit FAQS
 
 // OPTION 07
-void take_suggest(); // Function for Giving Suggestion or Complain
-void suggestion();   // Function to view suggestions
+void take_suggest(string complainer[], string suggest[]); // Function for Giving Suggestion or Complain
+void suggestion(string complainer[], string suggest[]);   // Function to view suggestions
 
 // OPTION 08
-void approve_details(); // Function to Approve User Details
-int app = 0;            //_to count remaining users for approval
+void approve_details(string userName[], string password[], string email[]); // Function to Approve User Details
+int app = 0;                                                                //_to count remaining users for approval
 
-//									 				______________USER
-//MODE____________
+//									 				______________USER MODE____________
 // OPTION 02
-bool valid_user(string name, string pass_word); // Function for user validation
+bool valid_user(string name, string pass_word, string username[], string password[]); // Function for user validation
 string Uname;
-void user_login(); // Function for user login
+void user_login(string username[], string password[]); // Function for user login
 
 //											______________________USER
-//MENU__________________________
+// MENU__________________________
 // OPTION 01
-void sort_household();  // FUNCTION TO VIEW SORTED SCLASS FARE
-void sort_industrial(); // FUNCTION TO VIEW SORTED FCLASS FARE
+void sort_household(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]);  // FUNCTION TO VIEW SORTED SCLASS FARE
+void sort_industrial(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]); // FUNCTION TO VIEW SORTED FCLASS FARE
 
 // OPTION 02
-void available_products(char scene); // FUNCTION TO SEE AVAILABLE PRODUCTS
+void available_products(char scene, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]); // FUNCTION TO SEE AVAILABLE PRODUCTS
 
 // OPTION 03
-void store_in_arrays(); // Store in Arrays
-void reserve_product(); // FUNCTION FOR RESERVING A TICKET
+void store_in_arrays(int date_r, string month_r, string pnaam_r, int no_industrial_r, int no_household_r, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[]); // Store in Arrays
+void reserve_product(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[]);                                                                                      // FUNCTION FOR RESERVING A TICKET
 
 // OPTION 04
-int index_return(); // Function to return index for user detail who reserve
+int index_return(string username[]); // Function to return index for user detail who reserve
 int payable;
-void storage_details(int idx); // Function for see Reservation details
+void storage_details(int idx, string username[], string firstname[], string lastname[], long long CNIC[], string contact[], string productName[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[]); // Function for see Reservation details
 
 // OPTION 05
-void modify_order(); // FUNCTION TO MODIFY RESERVATION
+void modify_order(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[]); // FUNCTION TO MODIFY RESERVATION
 
 // OPTION 06
-void cancel_reservation(); // FUNCTION TO CANCEL RESERVATION
+void cancel_reservation(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[]); // FUNCTION TO CANCEL RESERVATION
 
 // OPTION 08
 void payment(); // FUNCTION FOR PAYMENT
 
 void clearscreen();                        // FUNCTION FOR CLEAR SCREEN
-void store_data();                         // FUNCTION TO STORE DATA IN FILE
 string parse_data(string word, int field); // FUNCTION FOR PARSING DATA
-void load_data();                          // FUNCTION TO LOAD DATA FROM FILE
 bool password_validation(string pass);     // Function for Password VALIDATION
 bool username_validation(string name);     // Function for Username VALIDATION
 bool email_validation(string email);       // Function for Email VALIDATION
+//--------------------File Handling Functions---------------------------
+void store_data(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[], string complainer[], string suggest[],string admin_name[],string admin_pass[],string admin_email[]);
+void load_data(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[], string complainer[], string suggest[],string admin_name[],string admin_pass[],string admin_email[]);  // FUNCTION TO LOAD DATA FROM FILE
+void storeNewUserRecordIntoFile(string usernameNew, string passwordNew, string firstnameNew, string lastnameNew, string emailNew, long long cnicNew, int ageNew, string genderNew, string cityNew, string contactNew);
+void loadUserRecordFromFile(string username[], string firstname[], string lastname[], string email[], long long CNIC[], string password[], string contact[]);
+void storeProductRecordIntoFile(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[]);
+//
+//									_______________________________________MAIN FUNCTION__________________________________
 
-//									_______________________________________MAIN
-//FUNCTION__________________________________
-
-main() { // start of main
-  load_data();
+main()
+{ // start of main
   // Variable for selecting option in user mode
   int word;
-
   // Variable for selecting user menu
   int number;
-
   // variable for selecting option within admin mode
   int op;
+  while (true)
+  {
+    string username[maxRecord];
+    string firstname[maxRecord];
+    string lastname[maxRecord];
+    string email[maxRecord];
+    long long CNIC[maxRecord];
+    string password[maxRecord];
+    string contact[maxRecord];
+    string gender[maxRecord];
+    string city[maxRecord];
+    int age[maxRecord];
 
-  while (true) { // start of WHILE LOOP for identity mode
-   loading();
+    string productName[maxRecord];
+    string productNo[maxRecord];
+    string product_time[maxRecord];
+    char dayNight[maxRecord];
+    int product_ind[maxRecord];
+    int product_house[maxRecord];
+    int industrial_price[maxRecord];
+    int household_price[maxRecord];
+    loadUserRecordFromFile(username, firstname, lastname, email, CNIC, password, contact);
+    // start of WHILE LOOP for identity mode
+    loading();
     header();
     // Variable for selecting option for identity mode
     char n = identity_mode();
-
+    int date[maxRecord];
+    string month[maxRecord];
+    string pnaam[maxRecord];
+    int no_industrial[maxRecord];
+    int no_household[maxRecord];
+    string products[maxRecord] = {"prod1", "prod2", "prod3", "prod4", "prod5", "prod6", "prod7", "prod8", "prod9", "prod10", "prod11", "prod12", "prod13", "prod14", "prod15", "prod16", "prod17", "prod18", "prod19", "prod20"};
+    string buy_product[maxRecord];
+    string UserN[maxRecord];
+    // Suggestion and Complain Box
+    string complainer[maxRecord];
+    string suggest[maxRecord];
+    //Admin 
+    string admin_name[5];
+    string admin_pass[5];
+    string admin_email[5];
+    load_data(date, month, pnaam, no_industrial, no_household, buy_product, products, UserN, complainer, suggest,admin_name,admin_pass,admin_email);
     if (n == 1) // option 1 for identity mode
     {
 
-      while (true) { // Start of WHILE loop for admin mode
+      while (true)
+      { // Start of WHILE loop for admin mode
 
         header();
         admin_mode();
         cin >> op;
         if (op == 1) // option 1 for admin mode
         {
-          admin_register();
+          admin_register(admin_name, admin_pass,admin_email);
           clearscreen();
         }
         if (op == 2) // option 2 for admin mode
         {
           header();
-          admin_login();
+          admin_login(admin_name, admin_pass);
 
-          while (true) { // start of WHILE LOOP for admin menu
-            store_data();
+          while (true)
+          { // start of WHILE LOOP for admin menu
+            store_data(date, month, pnaam, no_industrial, no_household, buy_product, products, UserN, complainer, suggest,admin_name,admin_pass,admin_email);
+            storeProductRecordIntoFile(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
+
             header();
             cout << "IDENTIFICATION MODE > Admin Mode > ADMIN" << endl;
             admin_menu();
@@ -206,8 +205,10 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > Admin Mode > ADMIN > Add Product"
                    << endl;
-              cout << "_____________" << endl << endl;
-              add_product();
+              cout << "_____________" << endl
+                   << endl;
+
+              add_product(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
               clearscreen();
             }
 
@@ -217,16 +218,17 @@ main() { // start of main
               cout
                   << "IDENTIFICATION MODE > Admin Mode > ADMIN > Delete Product"
                   << endl;
-              cout << "_____________" << endl << endl;
-              view_products();
+              cout << "_____________" << endl
+                   << endl;
+              view_products(productName, productNo, product_time, industrial_price, household_price);
               // Variable for deleting a PRODUCT
 
               string dlt;
               cout << "Enter Product Name You Want To Remove:..\nif you've "
                       "changed your mind Press N.";
               cin >> dlt;
-              int del_index = index_returner(dlt);
-              delete_product(del_index);
+              int del_index = index_returner(dlt, productName);
+              delete_product(del_index, productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
 
               cout << "You Have Successfully deleted " << dlt << endl;
               clearscreen();
@@ -237,8 +239,9 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > Admin Mode > ADMIN > View Products"
                    << endl;
-              cout << "_____________" << endl << endl;
-              view_products();
+              cout << "_____________" << endl
+                   << endl;
+              view_products(productName, productNo, product_time, industrial_price, household_price);
               clearscreen();
             }
 
@@ -249,13 +252,13 @@ main() { // start of main
                       "Product Details"
                    << endl;
               cout << "_____________" << endl;
-              view_products();
+              view_products(productName, productNo, product_time, industrial_price, household_price);
               // Variable for Entering PRODUCT Name to Modify
               string modify;
               cout << "Enter Product Name to MODIFY: ";
               cin >> modify;
-              int mod_ind = index_returner(modify);
-              modify_product(mod_ind);
+              int mod_ind = index_returner(modify, productName);
+              modify_product(mod_ind, productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
               clearscreen();
             }
 
@@ -266,7 +269,7 @@ main() { // start of main
                       "Details"
                    << endl;
               cout << "_____________" << endl;
-              buyer_detail();
+              buyer_detail(username, firstname, lastname, CNIC, contact, UserN, pnaam, no_industrial, no_household, buy_product);
               clearscreen();
             }
 
@@ -279,31 +282,36 @@ main() { // start of main
                   << "If you want to Add More FAQs Press Y or if not Press N: ";
               char Y;
               cin >> Y;
-              if (Y == 'Y') {
+              if (Y == 'Y')
+              {
                 add_faqs();
                 clearscreen();
-              } else {
+              }
+              else
+              {
                 clearscreen();
               }
             }
 
-            if (num == 7) { // option 7 for admin menu
+            if (num == 7)
+            { // option 7 for admin menu
               header();
               cout << "IDENTIFICATION MODE > Admin Mode > ADMIN > Respond To "
                       "Issues"
                    << endl;
               cout << "_____________" << endl;
-              suggestion();
+              suggestion(complainer, suggest);
               clearscreen();
             }
 
-            if (num == 8) { // option 8 for admin menu
+            if (num == 8)
+            { // option 8 for admin menu
               header();
               cout << "IDENTIFICATION MODE > Admin Mode > User Accounts"
                    << endl;
               cout << "_____________" << endl;
               cout << "User IDs" << endl;
-              approve_details();
+              approve_details(username, password, email);
               clearscreen();
             }
 
@@ -313,7 +321,8 @@ main() { // start of main
               break;
             }
           }
-        } else if (op == 3) // option 3 for admin mode
+        }
+        else if (op == 3) // option 3 for admin mode
         {
           loading();
 
@@ -326,18 +335,21 @@ main() { // start of main
     if (n == 2) // option 2 for identity mode
     {
 
-      while (true) { // start of while loop for user mode
-        store_data();
+      while (true)
+      { // start of while loop for user mode
+
         header();
         user_mode();
         cin >> word;
 
         if (word == 1) // option 1 for user mode
         {
+
           header();
           cout << "IDENTIFICATION MODE > User Mode > Register" << endl;
-          cout << "_____________" << endl << endl;
-          user_reg();
+          cout << "_____________" << endl
+               << endl;
+          user_reg(username, firstname, lastname, email, CNIC, password, contact, gender, city, age); // new user registeration function called
           clearscreen();
         }
 
@@ -347,10 +359,12 @@ main() { // start of main
           header();
           cout << "IDENTIFICATION MODE > User Mode > Login" << endl;
           cout << "_____________" << endl;
-          user_login();
+          user_login(username, password);
 
-          while (true) { // start of while loop for user menu
-            store_data();
+          while (true)
+          { // start of while loop for user menu
+            store_data(date, month, pnaam, no_industrial, no_household, buy_product, products, UserN, complainer, suggest,admin_name,admin_pass,admin_email);
+            storeProductRecordIntoFile(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
             header();
             cout << "IDENTIFICATION MODE > User Mode > " << Uname << endl;
             user_menu();
@@ -363,21 +377,22 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode >" << Uname
                    << " View products " << endl;
-              cout << "_____________" << endl << endl;
-              view_products();
+              cout << "_____________" << endl
+                   << endl;
+              view_products(productName, productNo, product_time, industrial_price, household_price);
               cout << "\n\n";
               cout << "To see Industrial products price in order Press any "
                       "key: ";
               getch();
               cout << endl;
-              sort_industrial();
+              sort_industrial(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
 
               cout << "\n\n";
               cout
                   << "To see Household products price in order Press any key: ";
               getch();
               cout << endl;
-              sort_household();
+              sort_household(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
               clearscreen();
             }
             if (number == 2) // option 2 for user menu
@@ -385,12 +400,13 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode >" << Uname
                    << " See Available Products " << endl;
-              cout << "_____________" << endl << endl;
+              cout << "_____________" << endl
+                   << endl;
               cout
                   << "Daily used product enter 'd' otherwise enter 'n' (d/n): ";
               char waqt;
               cin >> waqt;
-              available_products(waqt);
+              available_products(waqt, productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price);
               clearscreen();
             }
 
@@ -399,8 +415,9 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > Buy product" << endl;
-              cout << "_____________" << endl << endl;
-              reserve_product();
+              cout << "_____________" << endl
+                   << endl;
+              reserve_product(productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               clearscreen();
             }
 
@@ -410,8 +427,8 @@ main() { // start of main
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > See Reservation Details" << endl;
               cout << "_____________" << endl;
-              int index = index_return();
-              storage_details(index);
+              int index = index_return(username);
+              storage_details(index, username, firstname, lastname, CNIC, contact, productName, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               clearscreen();
             }
 
@@ -420,12 +437,13 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > Modify Order" << endl;
-              cout << "_____________" << endl << endl;
+              cout << "_____________" << endl
+                   << endl;
               cout << "PREVIOUS RESERVATION" << endl;
-              int index = index_return();
-              storage_details(index);
+              int index = index_return(username);
+              storage_details(index, username, firstname, lastname, CNIC, contact, productName, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               cout << endl;
-              modify_order();
+              modify_order(date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               clearscreen();
             }
 
@@ -435,18 +453,22 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > Cancel Order" << endl;
-              cout << "_____________" << endl << endl;
-              int index = index_return();
-              storage_details(index);
+              cout << "_____________" << endl
+                   << endl;
+              int index = index_return(username);
+              storage_details(index, username, firstname, lastname, CNIC, contact, productName, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               cout << "If you want to cancel Press Y if not press N: ";
               // Variable for making decision whether cancel reservation or not
               char YN;
               cin >> YN;
 
-              if (YN == 'Y' || YN == 'y') {
-                cancel_reservation();
+              if (YN == 'Y' || YN == 'y')
+              {
+                cancel_reservation(date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
                 clearscreen();
-              } else if (YN == 'N' || YN == 'n') {
+              }
+              else if (YN == 'N' || YN == 'n')
+              {
                 clearscreen();
               }
             }
@@ -457,7 +479,7 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > Suggestions/Complains" << endl;
-              take_suggest();
+              take_suggest(complainer, suggest);
               clearscreen();
             }
 
@@ -467,8 +489,8 @@ main() { // start of main
               header();
               cout << "IDENTIFICATION MODE > User Mode > " << Uname
                    << " > Payment Method" << endl;
-              int indx = index_return();
-              storage_details(indx);
+              int indx = index_return(username);
+              storage_details(indx, username, firstname, lastname, CNIC, contact, productName, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
               payment();
               clearscreen();
             }
@@ -503,16 +525,19 @@ main() { // start of main
 
 //_______________Function to Convert string to integer
 
-int str_to_i(string num) {
+int str_to_i(string num)
+{
   int sum = 0;
   int count = 0;
   int y;
-  for (int i = 0; num[i] != '\0'; i++) {
+  for (int i = 0; num[i] != '\0'; i++)
+  {
     count++;
   }
   int check = count;
 
-  for (int i = 0; i < count; i++) {
+  for (int i = 0; i < count; i++)
+  {
     y = num[i];
     y = y - 48;
     sum = sum + y * pow(10, check - 1);
@@ -523,16 +548,19 @@ int str_to_i(string num) {
 
 //_______________Function to convert string to long long
 
-long long str_to_l(string num) {
+long long str_to_l(string num)
+{
   int sum = 0;
   int count = 0;
   int y;
-  for (int i = 0; num[i] != '\0'; i++) {
+  for (int i = 0; num[i] != '\0'; i++)
+  {
     count++;
   }
   int check = count;
 
-  for (int i = 0; i < count; i++) {
+  for (int i = 0; i < count; i++)
+  {
     y = num[i];
     y = y - 48;
     sum = sum + y * pow(10, check - 1);
@@ -542,7 +570,8 @@ long long str_to_l(string num) {
 }
 
 //_______________Function for a HEADER
-void header() {
+void header()
+{
 
   system("cls");
   const int size = 35;
@@ -634,22 +663,26 @@ void header() {
        << endl;
 }
 //____________________GOTOXY___________________
-void gotoxy(int x, int y) {
+void gotoxy(int x, int y)
+{
   COORD coordinates; // coordinates is declared as COORD
   coordinates.X = x; // defining x-axis
   coordinates.Y = y; // defining  y-axis
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
 }
 //____________________LOADING__________________
-void loading() {
+void loading()
+{
   system("cls");
   char ch = 219;
   gotoxy(63, 22);
   cout << "LOADING";
-  for (int i = 0; i < 25; i++) {
+  for (int i = 0; i < 25; i++)
+  {
     gotoxy(71 + i, 22);
     cout << ch;
-    if (i > 12) {
+    if (i > 12)
+    {
       gotoxy(71 + i, 22);
       cout << ch;
       Sleep(20);
@@ -658,7 +691,8 @@ void loading() {
   }
 }
 //____________________Function to store admin Details_____________________
-void admin_details(string name, string pass, string mail) {
+void admin_details(string name, string pass, string mail, string admin_name[],string admin_pass[],string admin_email[])
+{
   admin_name[admin_count] = name;
   admin_pass[admin_count] = pass;
   admin_email[admin_count] = mail;
@@ -666,74 +700,87 @@ void admin_details(string name, string pass, string mail) {
 }
 
 //__________________FUNCTION to register admin
-void admin_register() {
+void admin_register( string admin_name[],string admin_pass[],string admin_email[])
+{
   system("cls");
   header();
   cout << "\tADMIN REGISTRATION" << endl;
   cout << "Enter Name: ";
   cin >> admin;
-  while (!username_validation(admin)) {
+  while (!username_validation(admin))
+  {
     cout << "Must Contain Numbers: ";
     cin >> admin;
   }
   cout << "Enter Password: ";
   cin >> pass;
-  while (!password_validation(pass)) {
+  while (!password_validation(pass))
+  {
     cout << "Password at least 8 characters containing number: ";
     cin >> pass;
   }
   cout << "Enter E-mail:  ";
   string email;
   cin >> email;
-  while (!email_validation(email)) {
+  while (!email_validation(email))
+  {
     cout << "Email Should Contain @ character: ";
     cin >> email;
   }
-  admin_details(admin, pass, email);
+  admin_details(admin, pass, email,admin_name, admin_pass,admin_email);
 }
 
 //__________________Function for admin validation_______________________
 
-bool valid_admin(string name, string password) {
+bool valid_admin(string name, string password,string admin_name[],string admin_pass[])
+{
   bool flag = false;
-  for (int i = 0; i < 5; i++) {
-    if (name == admin_name[i] && password == admin_pass[i]) {
+  for (int i = 0; i < 5; i++)
+  {
+    if (name == admin_name[i] && password == admin_pass[i])
+    {
       flag = true;
     }
   }
-  if (flag == true) {
+  if (flag == true)
+  {
     return true;
-  } else if (flag == false) {
+  }
+  else if (flag == false)
+  {
     return false;
   }
   return 0;
 }
 
 //__________________Function for admin login______________________
-void admin_login() {
-  string name;
-  string password;
+void admin_login(string admin_name[],string admin_pass[])
+{
+  string name1;
+  string password1;
   cout << "IDENTIFICATION MODE > ADMIN MODE > LOGIN" << endl;
   cout << "_____________" << endl;
   cout << "       ENTER USERNAME: ";
-  cin >> name;
+  cin >> name1;
   cout << "       ENTER PASSWORD: ";
-  cin >> password;
+  cin >> password1;
 
-  while (!(valid_admin(name, password))) {
+  while (!(valid_admin(name1,password1,admin_name,admin_pass)))
+  {
     header();
     cout << "IDENTITY MODE > ADMIN MODE > LOGIN" << endl;
     cout << "_____________" << endl;
     cout << "Wrong Credentials TYPE AGAIN" << endl;
     cout << "       ENTER USERNAME: ";
-    cin >> name;
+    cin >> name1;
     cout << "       ENTER PASSWORD: ";
-    cin >> password;
+    cin >> password1;
   }
 }
 
 //__________________________Function for ADMIN MENU________________________
-void admin_menu() {
+void admin_menu()
+{
   cout << "_____________" << endl;
   cout << "Choose One of the Following Options " << endl;
   cout << "   1.  Add Products " << endl;
@@ -749,7 +796,8 @@ void admin_menu() {
 }
 
 //__________________________Function for USER MENU__________________________
-void user_menu() {
+void user_menu()
+{
   cout << "Choose one of the following options" << endl;
   cout << "	1.	View Product Details" << endl;
   cout << "	2.	See Available Products" << endl;
@@ -764,11 +812,10 @@ void user_menu() {
   cout << "YOUR OPTION:..";
 }
 
-
-    //__________________________Function for IDENTITY
-    //MODE_______________________
-    char
-    identity_mode() {
+//__________________________Function for IDENTITY
+// MODE_______________________
+char identity_mode()
+{
   cout << "IDENTIFICATION MODE" << endl;
   cout << "___________________" << endl;
   cout << "Choose One of the Following Option Number " << endl;
@@ -781,7 +828,8 @@ void user_menu() {
 }
 
 //_________________________Function for admin mode___________________________
-void admin_mode() {
+void admin_mode()
+{
   cout << "IDENTITY MODE > ADMIN MODE " << endl;
   cout << "_____________" << endl;
   cout << "Choose One of the Following Option Number " << endl;
@@ -792,7 +840,8 @@ void admin_mode() {
 }
 
 //_________________________function for user mode____________________________
-void user_mode() {
+void user_mode()
+{
   cout << "IDENTITY MODE > ADMIN MODE " << endl;
   cout << "_____________" << endl;
   cout << "Choose One of the Following Option Number " << endl;
@@ -802,87 +851,96 @@ void user_mode() {
   cout << "YOUR OPTION:..";
 }
 
-//________________________Function for a User Register
-//arrays________________________
-void user_register(string user_name, string first_name, string last_name,
-                   string e_mail, long long C_NIC, string pass_word,
-                   string con_tact) {
-  username[usercount] = user_name;
-  firstname[usercount] = first_name;
-  lastname[usercount] = last_name;
-  email[usercount] = e_mail;
-  CNIC[usercount] = C_NIC;
-  password[usercount] = pass_word;
-  contact[usercount] = con_tact;
-  approved_N[app] = user_name;
-  usercount++;
-  app++;
-}
-
 //___________________Function to Register User_______________
-void user_reg() {
+void user_reg(string username[], string firstname[], string lastname[], string email[], long long CNIC[], string password[], string contact[], string gender[], string city[], int age[])
+{
+  string usernameNew;
+  string passwordNew;
+  string firstnameNew;
+  string lastnameNew;
+  string emailNew;
+  long long cnicNew;
+  int ageNew;
+  string genderNew;
+  string cityNew;
+  string contactNew;
+
   cout << "USERNAME: ";
-  string username;
-  cin >> username;
-  while (!username_validation(username)) {
+  cin >> usernameNew;
+  while (!username_validation(usernameNew))
+  {
     cout << "Must Contain Numbers: ";
-    cin >> username;
+    cin >> usernameNew;
   }
   cout << "FIRST NAME: ";
-  string firstname;
-  cin >> firstname;
+  cin >> firstnameNew;
   cout << "LAST NAME: ";
-  string lastname;
-  cin >> lastname;
+  cin >> lastnameNew;
   cout << "E-MAIL: ";
-  string email;
-  cin >> email;
-  while (!email_validation(email)) {
+  cin >> emailNew;
+  while (!email_validation(emailNew))
+  {
     cout << "Email Should Contain @ character: ";
-    cin >> email;
+    cin >> emailNew;
   }
   cout << "ENTER CNIC (no dashes): ";
-  long long NIC;
-  cin >> NIC;
-  while (true) {
+  cin >> cnicNew;
+  while (true)
+  {
     int counter = 0;
-    for (long long i = NIC; i != 0; i = i / 10) {
+    for (long long i = cnicNew; i != 0; i = i / 10)
+    {
       counter++;
     }
-    if (counter == 13) {
+    if (counter == 13)
+    {
       break;
-    } else {
+    }
+    else
+    {
       cout << "Invalid CNIC" << endl;
       cout << "ENTERr CNIC: ";
-      cin >> NIC;
+      cin >> cnicNew;
     }
   }
   cout << "Password: ";
-  string pass;
-  cin >> pass;
-  while (!password_validation(pass)) {
+  cin >> passwordNew;
+  while (!password_validation(passwordNew))
+  {
     cout << "Password at least 8 char containing numbers: ";
-    cin >> pass;
+    cin >> passwordNew;
   }
   cout << "Age: ";
-  int age;
-  cin >> age;
-  while (age <= 0) {
+  cin >> ageNew;
+  while (ageNew <= 0)
+  {
     cout << "Invalid Age" << endl;
     cout << "Age: ";
-    cin >> age;
+    cin >> ageNew;
   }
-
   cout << "Gender: ";
-  string gender;
-  cin >> gender;
+  cin >> genderNew;
   cout << "City: ";
-  string city;
-  cin >> city;
+  cin >> cityNew;
   cout << "Contact: ";
-  string contact;
-  cin >> contact;
-  user_register(username, firstname, lastname, email, NIC, pass, contact);
+  cin >> contactNew;
+  // Add new user record in arrays
+  username[usercount] = usernameNew;
+  password[usercount] = passwordNew;
+  firstname[usercount] = firstnameNew;
+  lastname[usercount] = lastnameNew;
+  email[usercount] = emailNew;
+  CNIC[usercount] = cnicNew;
+  contact[usercount] = contactNew;
+  gender[usercount] = genderNew;
+  city[usercount] = cityNew;
+  age[usercount] = ageNew;
+
+  approved_N[app] = usernameNew;
+  usercount++;
+  app++;
+  // store new User record into file
+  storeNewUserRecordIntoFile(usernameNew, passwordNew, firstnameNew, lastnameNew, emailNew, cnicNew, ageNew, genderNew, cityNew, contactNew);
 }
 
 // ---------- ADMIN MENU----------
@@ -890,9 +948,34 @@ void user_reg() {
 // OPTION 01
 
 //________________FUNCTION TO ADD PRODUCT DETAIL in ARRAYS___________________
+//_______________FUNCTION TO ADD PRODUCT__________________
 
-void product_details(string pnum, string pname, string rtime, char scene,
-                     int Fproducts, int Sproducts, int Ffare, int Sfare) {
+void add_product(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
+  string pnum;
+  string pname;
+  string rtime;
+  char scene;
+  int Fproducts;
+  int Ffare;
+  int Sproducts;
+  int Sfare;
+  cout << "Product No.: ";
+  cin >> pnum;
+  cout << "Product Name: ";
+  cin >> pname;
+  cout << "Recieving Time: ";
+  cin >> rtime;
+  cout << "Daily used product 'd' otherwise 'n' (d/n): ";
+  cin >> scene;
+  cout << "No. of Industrial Products: ";
+  cin >> Fproducts;
+  cout << "Industrial product price: ";
+  cin >> Ffare;
+  cout << "No. of Household Products: ";
+  cin >> Sproducts;
+  cout << "Household Product price: ";
+  cin >> Sfare;
   productNo[count_product] = pnum;
   productName[count_product] = pname;
   product_time[count_product] = rtime;
@@ -903,51 +986,27 @@ void product_details(string pnum, string pname, string rtime, char scene,
   household_price[count_product] = Sfare;
   count_product++;
 }
-//_______________FUNCTION TO ADD PRODUCT__________________
-
-void add_product() {
-  cout << "Product No.: ";
-  string pnum;
-  cin >> pnum;
-  cout << "Product Name: ";
-  string pname;
-  cin >> pname;
-  cout << "Recieving Time: ";
-  string rtime;
-  cin >> rtime;
-  cout << "Daily used product 'd' otherwise 'n' (d/n): ";
-  char scene;
-  cin >> scene;
-  cout << "No. of Industrial Products: ";
-  int Fproducts;
-  cin >> Fproducts;
-  cout << "Industrial product price: ";
-  int Ffare;
-  cin >> Ffare;
-  cout << "No. of Household Products: ";
-  int Sproducts;
-  cin >> Sproducts;
-  cout << "Household Product price: ";
-  int Sfare;
-  cin >> Sfare;
-  product_details( pnum, pname, rtime, scene, Fproducts, Sproducts, Ffare, Sfare);
-}
 
 // OPTION 02
 
 //___________________FUNCTION FOR DELETING PRODUCT__________________
-int index_returner(string Tname) {
+int index_returner(string Tname, string productName[])
+{
 
-  for (int i = 0; i < count_product; i++) {
-    if (productName[i] == Tname) {
+  for (int i = 0; i < count_product; i++)
+  {
+    if (productName[i] == Tname)
+    {
       return i;
     }
   }
   return 0;
 }
 
-void delete_product(int idx) {
-  for (int i = idx; i < count_product - 1; i++) {
+void delete_product(int idx, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
+  for (int i = idx; i < count_product - 1; i++)
+  {
     productName[i] = productName[i + 1];
     productNo[i] = productNo[i + 1];
     product_time[i] = product_time[i + 1];
@@ -962,10 +1021,14 @@ void delete_product(int idx) {
 
 // OPTION 03
 //___________________FUNCTION TO VIEW PRODUCT DETAILS________________
-void view_products() {
-  if (count_product == 0) {
+void view_products(string productName[], string productNo[], string product_time[], int industrial_price[], int household_price[])
+{
+  if (count_product == 0)
+  {
     cout << "No Product To Show";
-  } else {
+  }
+  else
+  {
     cout << "|Product No."
          << "|Product Name"
          << "\t"
@@ -975,7 +1038,8 @@ void view_products() {
          << "\t"
          << "|Household prod." << endl
          << endl;
-    for (int i = 0; i < count_product; i++) {
+    for (int i = 0; i < count_product; i++)
+    {
       cout << "|" << productNo[i] << "\t\t"
            << "|" << productName[i] << "\t\t"
            << "|" << product_time[i] << "\t\t"
@@ -987,7 +1051,8 @@ void view_products() {
 
 // OPTION 04
 //_______________FUNCTION FOR MODIFICATION__________________________
-void modify_product(int idx) {
+void modify_product(int idx, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
   cout << "Product No.: ";
   cin >> productNo[idx];
   cout << "Product Name: ";
@@ -1009,16 +1074,23 @@ void modify_product(int idx) {
 // OPTION 05
 //_______________FUNCTION View Passeenger Details___________________
 
-void buyer_detail() {
-  if (store == 0) {
+void buyer_detail(string username[], string firstname[], string lastname[], long long CNIC[], string contact[], string UserN[], string pnaam[], int no_industrial[], int no_household[], string buy_product[])
+{
+  if (store == 0)
+  {
     cout << "No User found . Therefore, No User Details";
-  } else if (store != 0) {
+  }
+  else if (store != 0)
+  {
     cout << "|UserName\t\t|Name\t\t\t|NIC\t\t|Contact\t\t|PRODUCT Name\t\t|No. "
             "of products(F/S)\t\t|Ticket Number"
          << endl;
-    for (int i = 0; i < store; i++) {
-      for (int j = 0; j < usercount; j++) {
-        if (UserN[i] == username[j]) {
+    for (int i = 0; i < store; i++)
+    {
+      for (int j = 0; j < usercount; j++)
+      {
+        if (UserN[i] == username[j])
+        {
           cout << "|" << username[j] << "\t\t"
                << "|" << firstname[j] << " " << lastname[j] << "\t\t"
                << "|" << CNIC[j] << "\t\t"
@@ -1034,11 +1106,13 @@ void buyer_detail() {
 
 // OPTION 06
 //________________Function to edit FAQS____________
-void faqs() {
+void faqs()
+{
   fstream file;
   string faq;
   file.open("faqs.txt", ios::in);
-  while (!file.eof()) {
+  while (!file.eof())
+  {
     getline(file, faq);
     questions[faq_counter] = faq;
     getline(file, faq);
@@ -1046,11 +1120,14 @@ void faqs() {
     faq_counter++;
   }
   file.close();
-  cout << "---------------  FAQS  --------------" << endl << endl;
+  cout << "---------------  FAQS  --------------" << endl
+       << endl;
   if (faq_counter == 0)
     cout << "There is no FAQs yet";
-  if (faq_counter != 0) {
-    for (int i = 0; i < faq_counter; i++) {
+  if (faq_counter != 0)
+  {
+    for (int i = 0; i < faq_counter; i++)
+    {
 
       cout << questions[i];
       cout << endl;
@@ -1061,9 +1138,11 @@ void faqs() {
   }
 }
 
-void add_faqs() {
+void add_faqs()
+{
   bool flag = 1;
-  while (flag) {
+  while (flag)
+  {
     cout << "Add Questions: \n use underscore:\n";
     cin >> questions[faq_counter];
     cout << "Add Answer: \n";
@@ -1077,7 +1156,8 @@ void add_faqs() {
 // OPTION 07
 //________________Respong to Issues___________
 
-void take_suggest() {
+void take_suggest(string complainer[], string suggest[])
+{
 
   cout << "Enter Your Name Here: ";
   cin >> complainer[suggest_counter];
@@ -1089,11 +1169,16 @@ void take_suggest() {
   suggest_counter++;
 }
 
-void suggestion() {
-  if (suggest_counter == 0) {
+void suggestion(string complainer[], string suggest[])
+{
+  if (suggest_counter == 0)
+  {
     cout << "There is no Complains or Suggestions yet";
-  } else {
-    for (int i = 0; i < suggest_counter; i++) {
+  }
+  else
+  {
+    for (int i = 0; i < suggest_counter; i++)
+    {
       cout << complainer[i] << endl;
       cout << suggest[i] << endl;
     }
@@ -1103,23 +1188,31 @@ void suggestion() {
 // OPTION 08
 //_______________Function to Approve User Details________
 
-void approve_details() {
-  if (app == 0 || approved_N[0] == " ") {
+void approve_details(string userName[], string password[], string email[])
+{
+  if (app == 0 || approved_N[0] == " ")
+  {
     cout << "There is no user to SHOW" << endl;
     ;
-  } else {
+  }
+  else
+  {
     bool dec = 1;
-    while (dec) {
+    while (dec)
+    {
       header();
       cout << "IDENTITY MODE > ADMIN MODE > USER ACCOUNT" << endl;
       cout << "_____________" << endl;
       cout << "User IDs" << endl;
       cout << "|USERNAME\t\t\t|E-MAIL\t\t\t\t|PASSWORD" << endl;
-      for (int i = 0; i < app; i++) {
-        for (int j = 0; j < usercount; j++) {
-          if (approved_N[i] == username[j]) {
+      for (int i = 0; i < app; i++)
+      {
+        for (int j = 0; j < usercount; j++)
+        {
+          if (approved_N[i] == userName[j])
+          {
 
-            cout << "|" << username[j] << "\t\t\t"
+            cout << "|" << userName[j] << "\t\t\t"
                  << "|" << email[j] << "\t\t\t"
                  << "|" << password[j] << endl;
           }
@@ -1129,26 +1222,38 @@ void approve_details() {
       cout << "Enter USERNAME to approve or Type all to approve all: ";
       string usernaam;
       cin >> usernaam;
-      if (usernaam == "all") {
+      if (usernaam == "all")
+      {
         app = 0;
-      } else {
-        if (app == 1) {
+      }
+      else
+      {
+        if (app == 1)
+        {
           approved_N[0] = " ";
           app--;
-        } else {
-          for (int k = 0; k < app; k++) {
-            if (usernaam == approved_N[k]) {
-              for (int i = k; i < usercount - 1; i++) {
+        }
+        else
+        {
+          for (int k = 0; k < app; k++)
+          {
+            if (usernaam == approved_N[k])
+            {
+              for (int i = k; i < usercount - 1; i++)
+              {
                 approved_N[i] = approved_N[i + 1];
               }
               app--;
               break;
             }
           }
-          if (app != 0) {
+          if (app != 0)
+          {
             cout << "Want to approve more press 1 if not press 0: ";
             cin >> dec;
-          } else {
+          }
+          else
+          {
             dec = 0;
           }
         }
@@ -1158,36 +1263,44 @@ void approve_details() {
 }
 
 //__________________________________________________________USER
-//MODE__________________________________________________
+// MODE__________________________________________________
 
 // OPTION 02
 
 //__________________Function for user validation_______________________
-bool valid_user(string name, string pass_word) {
+bool valid_user(string name, string pass_word, string username[], string password[])
+{
   bool flag = false;
-  for (int i = 0; i < usercount; i++) {
-    if (name == username[i] && pass_word == password[i]) {
+  for (int i = 0; i < usercount; i++)
+  {
+    if (name == username[i] && pass_word == password[i])
+    {
       flag = true;
     }
   }
-  if (flag == true) {
+  if (flag == true)
+  {
     return true;
-  } else if (flag == false) {
+  }
+  else if (flag == false)
+  {
     return false;
   }
   return 0;
 }
 
 //_____________________function for user login_______________
-void user_login() {
+void user_login(string username[], string password[])
+{
 
-  string password;
+  string password1;
   cout << "       ENTER USERNAME: ";
   cin >> Uname;
   cout << "       ENTER PASSWORD: ";
-  cin >> password;
+  cin >> password1;
 
-  while (!(valid_user(Uname, password))) {
+  while (!(valid_user(Uname, password1, username, password)))
+  {
     header();
     cout << "IDENTIFICATION MODE > ADMIN MODE > LOGIN" << endl;
     cout << "_____________" << endl;
@@ -1195,23 +1308,27 @@ void user_login() {
     cout << "       ENTER USERNAME: ";
     cin >> Uname;
     cout << "       ENTER PASSWORD: ";
-    cin >> password;
+    cin >> password1;
   }
 }
 
 //_____________________________________________USER
-//MENU_____________________________
+// MENU_____________________________
 
 // OPTION 01
 //____FUNCTION TO VIEW SORTED SCLASS FARE
-void sort_household() {
+void sort_household(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
   int min = 0;
-  for (int i = 0; i < count_product; i++) {
-    for (int j = i+1; j < count_product; j++) {
-      if (household_price[j] <household_price[j] ) {
+  for (int i = 0; i < count_product; i++)
+  {
+    for (int j = i + 1; j < count_product; j++)
+    {
+      if (household_price[j] < household_price[j])
+      {
         min = household_price[i];
-       household_price[i]   =household_price[j] ;
-        household_price[j] =  min;
+        household_price[i] = household_price[j];
+        household_price[j] = min;
 
         int temp0 = industrial_price[i];
         industrial_price[i] = industrial_price[j];
@@ -1253,7 +1370,8 @@ void sort_household() {
        << "\t\t"
        << "|Household price" << endl
        << endl;
-  for (int i = 0; i < count_product; i++) {
+  for (int i = 0; i < count_product; i++)
+  {
     cout << "|" << productNo[i] << "\t\t"
          << "|" << productName[i] << "\t\t"
          << "|" << product_time[i] << "\t\t"
@@ -1263,11 +1381,15 @@ void sort_household() {
 }
 
 //____FUNCTION TO VIEW SORTED FCLASS FARE
-void sort_industrial() {
+void sort_industrial(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
   int min = 0;
-  for (int i = 0; i < count_product - 1; i++) {
-    for (int j = i+1; j < count_product; j++) {
-      if (industrial_price[i] < industrial_price[j]) {
+  for (int i = 0; i < count_product - 1; i++)
+  {
+    for (int j = i + 1; j < count_product; j++)
+    {
+      if (industrial_price[i] < industrial_price[j])
+      {
         int temp = household_price[i];
         household_price[i] = household_price[j];
         household_price[j] = temp;
@@ -1312,7 +1434,8 @@ void sort_industrial() {
        << "\t\t"
        << "|Household price" << endl
        << endl;
-  for (int i = 0; i < count_product; i++) {
+  for (int i = 0; i < count_product; i++)
+  {
     cout << "|" << productNo[i] << "\t\t"
          << "|" << productName[i] << "\t\t"
          << "|" << product_time[i] << "\t\t"
@@ -1324,11 +1447,15 @@ void sort_industrial() {
 // OPTION 02
 //____FUNCTION TO SEE AVAILABLE PRODUCTS
 
-void available_products(char scene) {
+void available_products(char scene, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
   bool a = false;
-  if (count_product == 0) {
+  if (count_product == 0)
+  {
     cout << "There is no product to show";
-  } else {
+  }
+  else
+  {
     cout << "|Product No."
          << "\t"
          << "|Product Name"
@@ -1339,8 +1466,10 @@ void available_products(char scene) {
          << "\t"
          << "|Household price" << endl
          << endl;
-    for (int i = 0; i < count_product; i++) {
-      if (dayNight[i] == scene) {
+    for (int i = 0; i < count_product; i++)
+    {
+      if (dayNight[i] == scene)
+      {
         a = true;
         cout << "|" << productNo[i] << "\t\t"
              << "|" << productName[i] << "|" << product_time[i] << "\t"
@@ -1349,7 +1478,8 @@ void available_products(char scene) {
       }
     }
   }
-  if (a == false) {
+  if (a == false)
+  {
     cout << "There is no Product available yet to show";
   }
   cout << endl;
@@ -1357,8 +1487,8 @@ void available_products(char scene) {
 
 // OPTION 03
 
-void store_in_arrays(int date_r, string month_r, string pnaam_r,
-                     int no_industrial_r, int no_household_r) {
+void store_in_arrays(int date_r, string month_r, string pnaam_r, int no_industrial_r, int no_household_r, string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[])
+{
   date[store] = date_r;
   month[store] = month_r;
   pnaam[store] = pnaam_r;
@@ -1368,9 +1498,12 @@ void store_in_arrays(int date_r, string month_r, string pnaam_r,
   UserN[store] = Uname;
   store++;
 
-  for (int i = 0; i < store; i++) {
-    for (int j = 0; j < count_product; j++) {
-      if (productName[j] == pnaam[i]) {
+  for (int i = 0; i < store; i++)
+  {
+    for (int j = 0; j < count_product; j++)
+    {
+      if (productName[j] == pnaam[i])
+      {
         cout << "Total Industrial Products: "
              << no_industrial[i] * industrial_price[j] << endl;
         cout << "Total Household Product: "
@@ -1384,41 +1517,52 @@ void store_in_arrays(int date_r, string month_r, string pnaam_r,
 
 //_____FUNCTION FOR RESERVING A TICKET
 
-void reserve_product() {
+void reserve_product(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[])
+{
   bool check = 0;
-  for (int i = 0; i < store; i++) {
-    if (Uname == UserN[i]) {
+  for (int i = 0; i < store; i++)
+  {
+    if (Uname == UserN[i])
+    {
       check = 1;
     }
   }
-  if (check == 1) {
+  if (check == 1)
+  {
     cout << "You have already Stored. To Modify go to Next Option" << endl;
-  } else {
-    int date;
-    string month, pnaam;
+  }
+  else
+  {
+    int date1;
+    string month1, pnaam1;
     cout << "Enter Product Name: ";
-    cin >> pnaam;
+    cin >> pnaam1;
     bool t = 0;
-    for (int i = 0; i < count_product; i++) {
-      if (pnaam == productName[i]) {
+    for (int i = 0; i < count_product; i++)
+    {
+      if (pnaam1 == productName[i])
+      {
         t = 1;
         break;
       }
     }
-    while (!t) {
+    while (!t)
+    {
       cout << "There is no such Product availables: ";
-      cin >> pnaam;
-      for (int i = 0; i < count_product; i++) {
-        if (pnaam == productName[i]) {
+      cin >> pnaam1;
+      for (int i = 0; i < count_product; i++)
+      {
+        if (pnaam1 == productName[i])
+        {
           t = 1;
           break;
         }
       }
     }
     cout << "Enter Date of Product ordering: ";
-    cin >> date;
+    cin >> date1;
     cout << "Enter Month of ordering: ";
-    cin >> month;
+    cin >> month1;
     cout << "Enter No.of Industrial products want to buy: ";
     int N_indus;
     cin >> N_indus;
@@ -1427,29 +1571,35 @@ void reserve_product() {
     cin >> N_house;
     cout << "You Have Successfully placed your Order." << endl;
     cout << "To SEE your Order Detail Go to Next Option:" << endl;
-    store_in_arrays(date, month, pnaam, N_indus, N_house);
+    store_in_arrays(date1, month1, pnaam1, N_indus, N_house, productName, productNo, product_time, dayNight, product_ind, product_house, industrial_price, household_price, date, month, pnaam, no_industrial, no_household, buy_product, products, UserN);
   }
 }
 
 // OPTION 04
 
 //__________________Function for see Reservation details_____
-int index_return() {
-  for (int i = 0; i < usercount; i++) {
-    if (Uname == username[i]) {
+int index_return(string username[])
+{
+  for (int i = 0; i < usercount; i++)
+  {
+    if (Uname == username[i])
+    {
       return i;
     }
   }
   return 0;
 }
 
-void storage_details(int idx) {
+void storage_details(int idx, string username[], string firstname[], string lastname[], long long CNIC[], string contact[], string productName[], int industrial_price[], int household_price[], int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[])
+{
   cout << "|UserName\t\t|Name\t\t|NIC\t\t|Contact\t\t|Product "
           "Number\t\t|Industrial prod.\t\t|Household prod."
        << endl;
 
-  for (int i = 0; i < store; i++) {
-    if (UserN[i] == Uname) {
+  for (int i = 0; i < store; i++)
+  {
+    if (UserN[i] == Uname)
+    {
       cout << "|" << username[idx] << "\t\t"
            << "|" << firstname[idx] << " " << lastname[idx] << "\t\t"
            << "|" << CNIC[idx] << "\t\t"
@@ -1459,9 +1609,12 @@ void storage_details(int idx) {
            << "|" << no_household[i] << endl;
     }
   }
-  for (int i = 0; i < store; i++) {
-    for (int j = 0; j < count_product; j++) {
-      if (productName[j] == pnaam[i]) {
+  for (int i = 0; i < store; i++)
+  {
+    for (int j = 0; j < count_product; j++)
+    {
+      if (productName[j] == pnaam[i])
+      {
         cout << endl;
         cout << "Total Industrial product price: "
              << no_industrial[i] * industrial_price[j] << endl;
@@ -1475,10 +1628,13 @@ void storage_details(int idx) {
 
 // OPTION 05
 //______FUNCTION TO MODIFY RESERVATION
-void modify_order() {
+void modify_order(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[])
+{
 
-  for (int i = 0; i < store; i++) {
-    if (UserN[i] == Uname) {
+  for (int i = 0; i < store; i++)
+  {
+    if (UserN[i] == Uname)
+    {
       cout << "Enter Product Name: ";
       cin >> pnaam[i];
       cout << "Enter Date of Buying product: ";
@@ -1495,10 +1651,14 @@ void modify_order() {
 
 // OPTION 06
 //______FUNCTION TO CANCEL RESERVATION
-void cancel_reservation() {
-  for (int i = 0; i < store; i++) {
-    if (UserN[i] == Uname) {
-      for (int j = 1; j < store - 1; j++) {
+void cancel_reservation(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[])
+{
+  for (int i = 0; i < store; i++)
+  {
+    if (UserN[i] == Uname)
+    {
+      for (int j = 1; j < store - 1; j++)
+      {
         pnaam[i] = pnaam[i + 1];
         date[i] = date[i + 1];
         month[i] = month[i + 1];
@@ -1517,23 +1677,32 @@ void cancel_reservation() {
 
 // OPTION 08
 //_______________FUNCTION FOR PAYMENT _________
-void payment() {
-  if (payable == 0) {
+void payment()
+{
+  if (payable == 0)
+  {
     cout << "You Have not yet store ";
-    cout << endl << "Reserve Your Seats & then come back";
-  } else {
+    cout << endl
+         << "Reserve Your Seats & then come back";
+  }
+  else
+  {
     cout << "Enter Payment Method(cash/card): ";
     string method;
     cin >> method;
 
-    if (method == "card") {
+    if (method == "card")
+    {
       cout << "Successfully Paid";
     }
-    if (method == "cash") {
-      cout << endl << "Amount You Paid: ";
+    if (method == "cash")
+    {
+      cout << endl
+           << "Amount You Paid: ";
       int paid;
       cin >> paid;
-      cout << endl << "Balance: ";
+      cout << endl
+           << "Balance: ";
       cout << payable - paid;
       cout << endl;
       cout << "Succesfully Done" << endl;
@@ -1542,7 +1711,8 @@ void payment() {
 }
 
 //______________________FUNCTION FOR CLEAR SCREEN__________________________
-void clearscreen() {
+void clearscreen()
+{
   cout << "Press Any key to continue ";
   getch();
   system("cls");
@@ -1550,56 +1720,41 @@ void clearscreen() {
 
 // FUNCTION TO STORE DATA IN FILE
 
-void store_data() {
+void storeNewUserRecordIntoFile(string usernameNew, string passwordNew, string firstnameNew, string lastnameNew, string emailNew, long long cnicNew, int ageNew, string genderNew, string cityNew, string contactNew)
+{
   fstream file;
-  file.open("admin.txt", ios::out);
-  for (int i = 0; i < admin_count; i++) {
-    if (i != 0)
-      file << "\n";
-    file << admin_name[i];
-    file << ',';
-    file << admin_pass[i];
-    file << ',';
-    file << admin_email[i];
-    if (i != admin_count - 2) {
-      file << "\n";
-    }
-  }
-
-  file.close();
-
+  int i = 0;
   file.open("user.txt", ios::out);
-  for (int i = 0; i < usercount; i++) {
+  for (i = 0; i < usercount; i++)
+  {
     if (i != 0)
       file << "\n";
-    file << username[i];
+    file << usernameNew[i];
     file << ',';
-    file << firstname[i];
+    file << firstnameNew[i];
     file << ',';
-    file << lastname[i];
+    file << lastnameNew[i];
     file << ',';
-    file << email[i];
+    file << emailNew[i];
     file << ',';
-    file << CNIC[i];
+    file << cnicNew["i"];
     file << ',';
-    file << password[i];
+    file << passwordNew[i];
     file << ',';
-    file << contact[i];
-    if (i != usercount - 2) {
+    file << contactNew[i];
+    if (i != usercount - 2)
+    {
       file << "\n";
     }
   }
   file.close();
-
-  file.open("approve.txt", ios::out);
-  for (int i = 0; i < app; i++) {
-    file << approved_N[i];
-    file << "\n";
-  }
-  file.close();
-
+}
+void storeProductRecordIntoFile(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
+  fstream file;
   file.open("product.txt", ios::out);
-  for (int i = 0; i < count_product; i++) {
+  for (int i = 0; i < count_product; i++)
+  {
     if (i != 0)
       file << "\n";
     file << productName[i];
@@ -1617,14 +1772,45 @@ void store_data() {
     file << product_house[i];
     file << ',';
     file << household_price[i];
-    if (i != count_product - 1) {
+    if (i != count_product - 1)
+    {
       file << "\n";
     }
   }
   file.close();
+}
+void store_data(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[], string complainer[], string suggest[],string admin_name[],string admin_pass[],string admin_email[])
+{
+  fstream file;
+  file.open("admin.txt", ios::out);
+  for (int i = 0; i < admin_count; i++)
+  {
+    if (i != 0)
+      file << "\n";
+    file << admin_name[i];
+    file << ',';
+    file << admin_pass[i];
+    file << ',';
+    file << admin_email[i];
+    if (i != admin_count - 2)
+    {
+      file << "\n";
+    }
+  }
+
+  file.close();
+
+  file.open("approve.txt", ios::out);
+  for (int i = 0; i < app; i++)
+  {
+    file << approved_N[i];
+    file << "\n";
+  }
+  file.close();
 
   file.open("faqs.txt", ios::out);
-  for (int i = 0; i < faq_counter; i++) {
+  for (int i = 0; i < faq_counter; i++)
+  {
     file << questions[i];
     file << "\n";
     file << answers[i];
@@ -1633,18 +1819,21 @@ void store_data() {
   file.close();
 
   file.open("suggestion.txt", ios::out);
-  for (int i = 0; i < suggest_counter; i++) {
+  for (int i = 0; i < suggest_counter; i++)
+  {
     file << complainer[i];
     file << "\n";
     file << suggest[i];
-    if (i != suggest_counter - 1) {
+    if (i != suggest_counter - 1)
+    {
       file << "\n";
     }
   }
   file.close();
 
   file.open("storage.txt", ios::out);
-  for (int i = 0; i < store; i++) {
+  for (int i = 0; i < store; i++)
+  {
     if (i != 0)
       file << "\n";
     file << UserN[i];
@@ -1660,20 +1849,26 @@ void store_data() {
     file << no_industrial[i];
     file << ',';
     file << no_household[i];
-    if (i != store - 1) {
+    if (i != store - 1)
+    {
       file << "\n";
     }
   }
   file.close();
 }
 //_______FUNCTION For PARSING DATA
-string parse_data(string word, int field) {
+string parse_data(string word, int field)
+{
   int comma = 1;
   string item;
-  for (int i = 0; word[i] != '\0'; i++) {
-    if (word[i] == ',') {
+  for (int i = 0; word[i] != '\0'; i++)
+  {
+    if (word[i] == ',')
+    {
       comma++;
-    } else if (comma == field) {
+    }
+    else if (comma == field)
+    {
       item = item + word[i];
     }
   }
@@ -1682,39 +1877,16 @@ string parse_data(string word, int field) {
 
 // FUNCTION TO LOAD DATA FROM FILE
 
-void load_data() {
+void loadUserRecordFromFile(string username[], string firstname[], string lastname[], string email[], long long CNIC[], string password[], string contact[])
+{
   fstream file;
-  string word;
-  file.open("admin.txt", ios::in);
-  while (!file.eof()) {
-    getline(file, word);
-    if (word[0] != ',' && word[0] == '\0') {
-      admin_name[admin_count] = parse_data(word, 1);
-      admin_pass[admin_count] = parse_data(word, 2);
-      admin_email[admin_count] = parse_data(word, 3);
-      admin_count++;
-    } else {
-      continue;
-    }
-  }
-  admin_count--;
-  cout << admin_count;
-  getch();
-  file.close();
-
-  file.open("approve.txt", ios::in);
-  string letter;
-  while (!file.eof()) {
-    getline(file, letter);
-    approved_N[app] = letter;
-    app++;
-  }
-
-  file.open("user.txt", ios::in);
   string alphabet;
-  while (!file.eof()) {
+  file.open("user.txt", ios::in);
+  while (!file.eof())
+  {
     getline(file, alphabet);
-    if (alphabet[0] != ',' && alphabet[0] != ' ') {
+    if (alphabet[0] != ',' && alphabet[0] != ' ')
+    {
       username[usercount] = parse_data(alphabet, 1);
       firstname[usercount] = parse_data(alphabet, 2);
       lastname[usercount] = parse_data(alphabet, 3);
@@ -1723,19 +1895,27 @@ void load_data() {
       password[usercount] = parse_data(alphabet, 6);
       contact[usercount] = parse_data(alphabet, 7);
       usercount = usercount + 1;
-    } else {
+    }
+    else
+    {
       continue;
     }
   }
   file.close();
   cout << usercount;
   getch();
+}
+void loadFromProductFile(string productName[], string productNo[], string product_time[], char dayNight[], int product_ind[], int product_house[], int industrial_price[], int household_price[])
+{
+  fstream file;
 
   file.open("product.txt", ios::in);
   string product;
-  while (!file.eof()) {
+  while (!file.eof())
+  {
     getline(file, product);
-    if (product[0] != ',' && product[0] != '\0') {
+    if (product[0] != ',' && product[0] != '\0')
+    {
       productName[count_product] = parse_data(product, 1);
       productNo[count_product] = parse_data(product, 2);
       product_time[count_product] = parse_data(product, 3);
@@ -1746,17 +1926,55 @@ void load_data() {
       product_house[count_product] = str_to_i(parse_data(product, 7));
       household_price[count_product] = str_to_i(parse_data(product, 8));
       count_product++;
-    } else {
+    }
+    else
+    {
       continue;
     }
   }
   file.close();
   cout << count_product;
   getch();
+}
+
+void load_data(int date[], string month[], string pnaam[], int no_industrial[], int no_household[], string buy_product[], string products[], string UserN[], string complainer[], string suggest[],string admin_name[],string admin_pass[],string admin_email[])
+{
+  fstream file;
+  string word;
+  file.open("admin.txt", ios::in);
+  while (!file.eof())
+  {
+    getline(file, word);
+    if (word[0] != ',' && word[0] == '\0')
+    {
+      admin_name[admin_count] = parse_data(word, 1);
+      admin_pass[admin_count] = parse_data(word, 2);
+      admin_email[admin_count] = parse_data(word, 3);
+      admin_count++;
+    }
+    else
+    {
+      continue;
+    }
+  }
+  admin_count--;
+  cout << admin_count;
+  getch();
+  file.close();
+
+  file.open("approve.txt", ios::in);
+  string letter;
+  while (!file.eof())
+  {
+    getline(file, letter);
+    approved_N[app] = letter;
+    app++;
+  }
 
   file.open("suggestion.txt", ios::in);
   string suggesty;
-  while (!file.eof()) {
+  while (!file.eof())
+  {
     getline(file, suggesty);
     complainer[suggest_counter] = suggesty;
     getline(file, suggesty);
@@ -1767,9 +1985,11 @@ void load_data() {
 
   file.open("storage.txt", ios::in);
   string place;
-  while (!file.eof()) {
+  while (!file.eof())
+  {
     getline(file, place);
-    if (place[0] != ',' && place[0] != '0') {
+    if (place[0] != ',' && place[0] != '0')
+    {
       UserN[store] = parse_data(place, 1);
       pnaam[store] = parse_data(place, 2);
       buy_product[store] = parse_data(place, 3);
@@ -1787,44 +2007,59 @@ void load_data() {
 }
 
 //___________________________Function for Password VALIDATION________________
-bool password_validation(string pass) {
+bool password_validation(string pass)
+{
 
   bool t = 1;
   int passer = 0;
-  for (int i = 0; pass[i] != '\0'; i++) {
+  for (int i = 0; pass[i] != '\0'; i++)
+  {
     passer++;
     int y = pass[i];
-    if (y >= 48 && y <= 57) {
+    if (y >= 48 && y <= 57)
+    {
       t = 0;
     }
   }
-  if (t == 0 && passer >= 8) {
+  if (t == 0 && passer >= 8)
+  {
     return 1;
-  } else {
+  }
+  else
+  {
     return 0;
   }
 }
 //___________________________Function for Username VALIDATION________________
-bool username_validation(string name) {
+bool username_validation(string name)
+{
   bool a = true;
-  for (int i = 0; name[i] != '\0'; i++) {
+  for (int i = 0; name[i] != '\0'; i++)
+  {
     int y = name[i];
-    if (y >= 48 && y <= 57) {
+    if (y >= 48 && y <= 57)
+    {
       a = false;
       break;
     }
   }
-  if (a) {
+  if (a)
+  {
     return 0;
-  } else {
+  }
+  else
+  {
     return 1;
   }
 }
 
-bool email_validation(string email) {
+bool email_validation(string email)
+{
   int mail = 0;
-  for (int i = 0; email[i] != '\0'; i++) {
-    if (email[i] == '@') {
+  for (int i = 0; email[i] != '\0'; i++)
+  {
+    if (email[i] == '@')
+    {
       return true;
       break;
     }
